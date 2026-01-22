@@ -1,25 +1,32 @@
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/message_provider.dart';
+
+class MessagePage extends ConsumerStatefulWidget {
+  const MessagePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<MessagePage> createState() => _MessagePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _MessagePageState extends ConsumerState<MessagePage>
     with AutomaticKeepAliveClientMixin {
-  int count = 0;
-
   @override
   Widget build(BuildContext context) {
-    super.build(context); // 必须
+    super.build(context); // 必须调用
+    final count = ref.watch(messageCountProvider);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('计数：$count'),
+          Text('消息计数：$count', style: const TextStyle(fontSize: 24)),
+          const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => setState(() => count++),
-            child: const Text('增加'),
+            onPressed: () {
+              ref.read(messageCountProvider.notifier).state++;
+            },
+            child: const Text('增加消息计数'),
           ),
         ],
       ),
