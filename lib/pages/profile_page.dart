@@ -1,25 +1,33 @@
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/profile_provider.dart';
+
+class ProfilePage extends ConsumerStatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _ProfilePageState extends ConsumerState<ProfilePage>
     with AutomaticKeepAliveClientMixin {
-  int count = 0;
-
   @override
   Widget build(BuildContext context) {
-    super.build(context); // 必须
+    super.build(context); // 必须调用
+    final name = ref.watch(profileNameProvider);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('计数：$count'),
+          Text('用户名：$name', style: const TextStyle(fontSize: 24)),
+          const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => setState(() => count++),
-            child: const Text('增加'),
+            onPressed: () {
+              final newName = '用户${DateTime.now().second}';
+              ref.read(profileNameProvider.notifier).state = newName;
+            },
+            child: const Text('修改用户名'),
           ),
         ],
       ),
